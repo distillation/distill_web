@@ -1,0 +1,12 @@
+!!!
+%html
+    %head
+        %title Transformation Benchmarks
+        = stylesheet_link_tag "application", :media => "all"
+        = javascript_include_tag "application"
+        = csrf_meta_tags
+    %body
+        .main_content
+            = render :partial => 'shared/header'
+            = yield
+            = render :partial => 'shared/footer'

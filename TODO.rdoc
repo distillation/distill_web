@@ -1,0 +1,5 @@
+== TODO List
+
+* Check for duplicate programs
+* Make sure its not possible to delete items owned by someone else
+* Automatic argument detection (and an input list for these)

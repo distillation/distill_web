@@ -1,0 +1,22 @@
+/Users/dever/git/distill_web/public/files//testcases/append2 +RTS -sstdout 
+          68,616 bytes allocated in the heap
+           2,880 bytes copied during GC
+          43,784 bytes maximum residency (1 sample(s))
+          21,752 bytes maximum slop
+               1 MB total memory in use (0 MB lost due to fragmentation)
+
+  Generation 0:     0 collections,     0 parallel,  0.00s,  0.00s elapsed
+  Generation 1:     1 collections,     0 parallel,  0.00s,  0.00s elapsed
+
+  INIT  time    0.00s  (  0.00s elapsed)
+  MUT   time    0.00s  (  0.00s elapsed)
+  GC    time    0.00s  (  0.00s elapsed)
+  EXIT  time    0.00s  (  0.00s elapsed)
+  Total time    0.00s  (  0.00s elapsed)
+
+  %GC time      13.4%  (19.0% elapsed)
+
+  Alloc rate    74,099,352 bytes per MUT second
+
+  Productivity  14.6% of total user, 12.2% of total elapsed
+

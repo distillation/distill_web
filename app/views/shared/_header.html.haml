@@ -1,0 +1,25 @@
+.header
+    %ul
+        .left
+            %li
+                = link_to "Programs", programs_path
+                - if current_user
+                    %ul
+                        %li
+                            = link_to "My Programs", user_programs_path(current_user)
+            %li
+                = link_to "Benchmarks", benchmarks_path
+                - if current_user
+                    %ul
+                        %li
+                            = link_to "My Benchmarks", user_benchmarks_path(current_user)
+
+        .right
+            - if current_user
+                %li
+                    = link_to "Logout", :logout
+            - else
+                %li
+                    = link_to "Login", :login
+                %li
+                    = link_to "Register", new_user_path
