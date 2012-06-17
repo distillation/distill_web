@@ -16,36 +16,13 @@ ActiveRecord::Schema.define(:version => 20120530151114) do
     t.integer  "user_id"
     t.string   "name"
     t.string   "file_name"
+    t.string   "arguments_file_name"
     t.integer  "size"
     t.integer  "lines"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
-  end
-
-  create_table "timings", :force => true do |t|
-    t.integer  "user_id"
-    t.integer  "program_id"
-    t.string   "arguments"
-    t.decimal  "normal_compile"
-    t.decimal  "normal_O2_compile"
-    t.decimal  "super_compile"
-    t.decimal  "super_O2_compile"
-    t.decimal  "distill_compile"
-    t.decimal  "distill_O2_compile"
-    t.decimal  "normal_time"
-    t.decimal  "normal_O2_time"
-    t.decimal  "super_time"
-    t.decimal  "super_O2_time"
-    t.decimal  "distill_time"
-    t.decimal  "distill_02_time"
-    t.integer  "normal_mem"
-    t.integer  "normal_O2_mem"
-    t.integer  "super_mem"
-    t.integer  "super_O2_mem"
-    t.integer  "distill_mem"
-    t.integer  "distill_O2_mem"
-    t.datetime "created_at",         :null => false
-    t.datetime "updated_at",         :null => false
+    t.integer  "number_of_levels"
+    t.integer  "number_of_runs"
+    t.datetime "created_at",          :null => false
+    t.datetime "updated_at",          :null => false
   end
 
   create_table "user_sessions", :force => true do |t|

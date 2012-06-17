@@ -1,20 +1,16 @@
 .header
     %ul
-        .left
+        .left_menu
             %li
                 = link_to "Programs", programs_path
                 - if current_user
                     %ul
                         %li
                             = link_to "My Programs", user_programs_path(current_user)
-            %li
-                = link_to "Benchmarks", benchmarks_path
-                - if current_user
-                    %ul
                         %li
-                            = link_to "My Benchmarks", user_benchmarks_path(current_user)
+                            = link_to "New Program", new_program_path
 
-        .right
+        .right_menu
             - if current_user
                 %li
                     = link_to "Logout", :logout

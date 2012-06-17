@@ -1,0 +1,100 @@
+.upper_left_small
+  %h2
+    Create A New Program
+  = form_for(@program) do |f|
+    .form_row
+      %span.label
+        = f.label 'Program Name'
+      %span.input
+        = f.text_field :name
+    .form_row
+      %span.label
+        = f.label 'Program File'
+      %span.input
+        = f.file_field :file
+    .form_row
+      %span.label
+        = f.label 'Arguments File'
+      %span.input
+        = f.file_field :arguments
+    .form_row
+      %span.label
+        = f.label 'Number of Runs'
+      %span.input
+        = f.select :number_of_runs, options_for_select([10, 100, 1000])
+    .form_row
+      %span.label
+        = f.label 'Number of Levels'
+      %span.input
+        = f.select :number_of_levels, options_for_select((1..10).to_a)
+    .form_row
+      %span.label
+      %span.input
+        = f.submit
+
+.lower_left_large
+  %h3 Program File
+  %ul
+    %li 
+      Must contain a definition of functions called
+      %code
+        main
+      and
+      %code
+        root
+    %li
+      %code
+        root
+      is the entry point for the transformers, it's arguments aren't transformed
+    %li
+      %code
+        main
+      must read
+      %b
+        one
+      number as an argument. This represents the benchmark level, to be used later.
+    %li
+      %code
+        main
+      must contain a call to
+      %code
+        root
+      along with whatever arguments are neccesary for root. These arguments must be calls to functions in the arguments file, based on the supplied level number.  
+    
+  %h3 Arguments File
+  %ul
+    %li
+      If
+      %code
+        root
+      takes two arguments, x and y, then the argument file should contain functions for generating these arguments, e.g.
+      %code
+        randomX
+      and
+      %code
+        randomY
+      that each take one argument (Int) representing the current benchmark level
+  %h3 Number of Levels
+  %ul
+    %li This represents the number of independant benchmarks to be run
+    %li If there are 5 levels, your graph will have 5 points on the x axis, and your random argument generators should generate 5 distinct cases, based on their supplied argument
+  %h3 Number of Runs
+  %ul
+    %li This represents the number of times each indepenent benchmark will be run.
+    %li Bear in mind that our system will be tied up when running your benchmarks, so select a number of runs relative to how long you expect your program to run
+    
+.right
+  %h2 Example
+  The example file below shows how to provide us with a file that has everything we need to transform and benchmark your program.
+  %pre{:class => 'brush: haskell', :title => 'NaiveReverse.hs'}
+    = @naive_reverse
+  
+  .text_example_outer
+    .text_example_inner
+      The below file is a simple example of how arguments should be computed for benchmarking. As the benchmark level increases, so does the complexity of the randomly generated data.
+  %pre{:class => 'brush: haskell', :title => 'Arguments.hs'}
+    = @arguments
+  
+  .text_example_outer
+    .text_example_inner  
+      If your supplied files match the above formats, then there should be no problem performing the transformations and benchmarks. However, it can take some time to obtain results, so we will email you when your benchmarks are completed.

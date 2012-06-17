@@ -1,13 +1,9 @@
 DistillWeb::Application.routes.draw do
   resources :user_sessions
-  resources :timings
   resources :users do
     resources :programs
-    resources :timings
   end
-  resources :programs do
-    resources :timings
-  end
+  resources :programs
 
   match 'login' => 'user_sessions#new', :as => :login
   match 'logout' => 'user_sessions#destroy', :as => :logout

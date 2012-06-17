@@ -3,10 +3,16 @@
     %head
         %title Transformation Benchmarks
         = stylesheet_link_tag "application", :media => "all"
+        = stylesheet_link_tag "shCore"
+        = stylesheet_link_tag "shThemeEclipse"
         = javascript_include_tag "application"
+        = javascript_include_tag "shBrushHaskell"
         = csrf_meta_tags
     %body
-        .main_content
+        .content
             = render :partial => 'shared/header'
             = yield
             = render :partial => 'shared/footer'
+        %script{:type => 'text/javascript'}
+            SyntaxHighlighter.defaults['toolbar'] = false;
+            SyntaxHighlighter.all();

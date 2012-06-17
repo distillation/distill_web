@@ -6,6 +6,37 @@ class ProgramsController < ApplicationController
   SUPER_DIR = FILES_ROOT + "super/" 
   DISTILL_DIR = FILES_ROOT + 'distill/' 
   
+  NAIVE_REVERSE = <<-END
+    module Main where
+
+  import System.Environment (getArgs)
+  import Arguments
+    
+  main = do
+    args <- getArgs
+    let level = read (head args) :: Int
+    print $ root (randomXS level)
+    
+  root = \\xs -> nrev xs
+    
+  nrev = \\xs -> case xs of
+    [] -> []
+    (y:ys) -> app (nrev ys) [y]
+    
+  app = \\xs ys -> case xs of
+    [] -> ys
+    (z:zs) -> (z:app zs ys)
+  END
+  
+  ARGUMENTS = <<-END
+    module Arguments where
+  
+    randomXS level = case level of
+      1 -> [1..10]
+      2 -> [10..100]
+      3 -> [100..1000]
+  END
+  
   
   # GET /programs
   # GET /programs.json
@@ -25,12 +56,7 @@ class ProgramsController < ApplicationController
   # GET /programs/1.json
   def show
     @program = Program.find(params[:id])
-    puts "obble"
-    if @current_user
-      @new_timing = Timing.new
-      @new_timing.user_id = @current_user.id
-      @new_timing.program_id = @program.id
-    end
+
     respond_to do |format|
       format.html # show.html.erb
       format.json { render :json => @program }
@@ -42,6 +68,9 @@ class ProgramsController < ApplicationController
   def new
     @program = Program.new
     @program.user_id = @current_user.id
+    
+    @naive_reverse = NAIVE_REVERSE
+    @arguments = ARGUMENTS
     
     respond_to do |format|
       format.html # new.html.erb
