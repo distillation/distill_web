@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120530151114) do
+ActiveRecord::Schema.define(:version => 20120618211028) do
 
   create_table "programs", :force => true do |t|
     t.integer  "user_id"
@@ -23,6 +23,37 @@ ActiveRecord::Schema.define(:version => 20120530151114) do
     t.integer  "number_of_runs"
     t.datetime "created_at",          :null => false
     t.datetime "updated_at",          :null => false
+  end
+
+  create_table "run_points", :force => true do |t|
+    t.integer  "run_id"
+    t.integer  "user_id"
+    t.integer  "program_id"
+    t.integer  "run_type_id"
+    t.integer  "run_time"
+    t.integer  "mem_size"
+    t.datetime "created_at",  :null => false
+    t.datetime "updated_at",  :null => false
+  end
+
+  create_table "run_types", :force => true do |t|
+    t.string   "name"
+    t.string   "description"
+    t.datetime "created_at",  :null => false
+    t.datetime "updated_at",  :null => false
+  end
+
+  create_table "runs", :force => true do |t|
+    t.integer  "user_id"
+    t.integer  "program_id"
+    t.decimal  "ghc_compile_time"
+    t.decimal  "super_compile_time"
+    t.decimal  "distill_compile_time"
+    t.integer  "ghc_size"
+    t.integer  "super_size"
+    t.integer  "distill_size"
+    t.datetime "created_at",           :null => false
+    t.datetime "updated_at",           :null => false
   end
 
   create_table "user_sessions", :force => true do |t|
