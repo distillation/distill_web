@@ -1,0 +1,39 @@
+- if @user.errors.any?
+  #error_explanation
+    %h2
+      = pluralize(@user.errors.count, "error")
+      prohibited this user from being saved
+    %ul
+      - @user.errors.full_messages.each do |msg|
+        %li
+          = msg
+
+.middle_wide
+  %h2
+    Create A New Account
+  = form_for(@user) do |f|
+    .form_row
+      %span.label
+        = f.label :username
+      %span.input
+        = f.text_field :username
+    .form_row
+      %span.label
+        = f.label 'Email'
+      %span.input
+        = f.text_field :email
+    .form_row
+      %span.label
+        = f.label :password
+      %span.input
+        = f.password_field :password
+    .form_row
+      %span.label 
+        = f.label 'Re-enter Password'
+      %span.input
+        = f.password_field :password_confirmation
+    .form_row
+      %span.label
+        &nbsp;
+      %span.input
+        = f.submit

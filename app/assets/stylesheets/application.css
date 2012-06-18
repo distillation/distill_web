@@ -220,13 +220,34 @@ div.syntaxhighlighter table caption {
     font-style: italic !important;
 }
 
-div.content .right .text_example_outer {
+div.content div.right div.text_example_outer {
     height: 15%;
     position: relative;
 }
 
-div.content .right .text_example_inner {
+div.content div.right div.text_example_inner {
     position: absolute;
     top: 25%;
     text-align: justify;
+}
+
+div.content div.middle_wide {
+    overflow: auto;
+    position: absolute;
+    top: 38.25%;
+    width: 100%;
+    margin: -1px;
+    border-radius: 10px;
+    border-top: 1px outset #013953;
+    border-bottom: 1px inset #013953;
+    border-right: 1px inset #013953;
+    border-left: 1px outset #013953;
+    vertical-align: middle;
+    padding-top:2%;
+    padding-bottom:2%;
+    height:16%;    
+}
+
+div.content div.middle_wide h2 {
+    margin-top: -1.5%;
 }
