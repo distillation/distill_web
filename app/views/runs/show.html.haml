@@ -1,0 +1,30 @@
+%p#notice= notice
+
+%p
+  %b User:
+  = @run.user_id
+%p
+  %b Program:
+  = @run.program_id
+%p
+  %b Ghc compile time:
+  = @run.ghc_compile_time
+%p
+  %b Super compile time:
+  = @run.super_compile_time
+%p
+  %b Distill compile time:
+  = @run.distill_compile_time
+%p
+  %b Ghc size:
+  = @run.ghc_size
+%p
+  %b Super size:
+  = @run.super_size
+%p
+  %b Distill size:
+  = @run.distill_size
+
+= link_to 'Edit', edit_run_path(@run)
+\|
+= link_to 'Back', runs_path

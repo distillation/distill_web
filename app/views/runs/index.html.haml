@@ -1,0 +1,33 @@
+%h1 Listing runs
+
+%table
+  %tr
+    %th User
+    %th Program
+    %th Ghc compile time
+    %th Super compile time
+    %th Distill compile time
+    %th Ghc size
+    %th Super size
+    %th Distill size
+    %th
+    %th
+    %th
+
+  - @runs.each do |run|
+    %tr
+      %td= run.user_id
+      %td= run.program_id
+      %td= run.ghc_compile_time
+      %td= run.super_compile_time
+      %td= run.distill_compile_time
+      %td= run.ghc_size
+      %td= run.super_size
+      %td= run.distill_size
+      %td= link_to 'Show', run
+      %td= link_to 'Edit', edit_run_path(run)
+      %td= link_to 'Destroy', run, :confirm => 'Are you sure?', :method => :delete
+
+%br
+
+= link_to 'New Run', new_run_path
