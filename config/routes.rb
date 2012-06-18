@@ -1,4 +1,6 @@
 DistillWeb::Application.routes.draw do
+  resources :runs
+
   resources :user_sessions
   resources :users do
     resources :programs
