@@ -85,16 +85,19 @@
     
 .right
   %h2 Example
-  The example file below shows how to provide us with a file that has everything we need to transform and benchmark your program.
+  %p
+    The example file below shows how to provide us with a file that has everything we need to transform and benchmark your program.
   %pre{:class => 'brush: haskell', :title => 'NaiveReverse.hs'}
     = @naive_reverse
   
   .text_example_outer
     .text_example_inner
-      The below file is a simple example of how arguments should be computed for benchmarking. As the benchmark level increases, so does the complexity of the randomly generated data.
+      %p
+        The below file is a simple example of how arguments should be computed for benchmarking. As the benchmark level increases, so does the complexity of the randomly generated data.
   %pre{:class => 'brush: haskell', :title => 'Arguments.hs'}
     = @arguments
   
   .text_example_outer
     .text_example_inner  
-      If your supplied files match the above formats, then there should be no problem performing the transformations and benchmarks. However, it can take some time to obtain results, so we will email you when your benchmarks are completed.
+      %p
+        If your supplied files match the above formats, then there should be no problem performing the transformations and benchmarks. However, it can take some time to obtain results, so we will email you when your benchmarks are completed.

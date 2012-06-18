@@ -74,15 +74,18 @@ div.header ul div li ul {
     position: absolute;
     display: none;
     text-align: center;
+    margin: 0;
 }
 
 div.header ul div li {
 	z-index: 3;
+	margin: 0;
 }
 
 div.header ul div li a {
     color: #eee;
     text-decoration: none;
+    margin: 0l
 }
 
 div.header ul div li:hover ul {
@@ -91,6 +94,7 @@ div.header ul div li:hover ul {
     background: #0272a7;   
     border-radius: 0px 0px 5px 5px;
     text-decoration: none;
+    margin: 0;
 }
 
 div.header ul div li ul li {
@@ -99,8 +103,8 @@ div.header ul div li ul li {
     padding-bottom: 2px;
     z-index: 3;
     margin: 0;
-    padding-left: 5px;
-    padding-right: 5px;
+    padding-left: 0px;
+    padding-right: 0px;
 }
 
 div.footer {
@@ -136,28 +140,7 @@ div.content div h3 {
 	padding-left: 5px;
 }
 
-div.content div ul li {
-    font-size: 90%;
-    padding-right: 10px;
-    text-align: justify;
-}
-
-div.content .right {
-	margin-left: -1px;
-	top: 5%;
-	position: absolute;
-	height: 90%;
-	width: 48%;
-	border-top-right-radius: 10px;
-	border-bottom-right-radius: 10px;
-	border: 1px solid #013953; 
-	border-top: 1px outset #013953;
-	border-bottom: 1px inset #013953;
-	border-right: 1px inset #013953;
-	border-left: 1px outset #013953;
-}
-
-div.content .right {
+div.content div.right {
 	margin-left: -1px;
 	position: absolute;
 	top: 5%;
@@ -170,9 +153,16 @@ div.content .right {
 	border-left: 1px outset #013953;
 	border-right: 1px inset #013953;
 	left: 52%;
+	text-align: justify;
+	font-size: 90%;
 }
 
-div.content .upper_left_small {
+div.content div.right p {
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+div.content div.upper_left_small {
 	position: absolute;
 	top: 5%;
 	height: 25%;
@@ -185,7 +175,7 @@ div.content .upper_left_small {
 	border-left: 1px outset #013953;
 }
 
-div.content .lower_left_large {
+div.content div.lower_left_large {
 	position: absolute;
 	top: 32%;
 	height: 63%;
@@ -196,6 +186,12 @@ div.content .lower_left_large {
 	border-bottom: 1px inset #013953;
 	border-right: 1px inset #013953;
 	border-left: 1px outset #013953;
+}
+
+div.content div.lower_left_large ul li {
+    padding-right: 15px;
+    font-size: 90%;
+    text-align: justify;
 }
 
 div.form_row {
