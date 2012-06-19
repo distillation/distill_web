@@ -9,10 +9,13 @@ class Program < ActiveRecord::Base
   validates :arguments_file_name, :presence => true
   validates :number_of_levels, :presence => true
   validates :number_of_runs, :presence => true
-  attr_accessor :file, :arguments, :folder_name, :file_name, :arguments_file_name
+  validates :folder_name, :presence => true
+  attr_accessor :file, :arguments
   
   FILES_ROOT = Rails.root.to_s + "/public/"
   PROGRAMS_DIR = FILES_ROOT + "programs/"
+  
+  ERROR_REGEX = /.+\/(.+\.hs.*\n.+)/
   
   NAIVE_REVERSE = <<-END
     module Main where
@@ -57,48 +60,43 @@ class Program < ActiveRecord::Base
     file_name.chomp('.hs')
   end
   
-  def set_folder_name(file)
-    @folder_name = Program.get_chomped_file_name(file)
-    if File.directory?(PROGRAMS_DIR + @folder_name)
-      i = 1
-      while File.directory?(PROGRAMS_DIR + @folder_name + i.to_s)
-        i += 1
-      end
-      @folder_name << i.to_s
-    end 
-    @folder_name << '/'
-  end
-  
   def save_file!(uploaded_file, arguments_file)
-    set_folder_name(uploaded_file.original_filename)
-    @file_name = uploaded_file.original_filename
-    @arguments_file_name = arguments_file.original_filename
+    self.folder_name =  (Program.count + 1).to_s + '/'
+    self.file_name = uploaded_file.original_filename
+    self.arguments_file_name = arguments_file.original_filename
     
-    program_dir = PROGRAMS_DIR + @folder_name
+    program_dir = PROGRAMS_DIR + self.folder_name
     Dir.mkdir(program_dir)
     
-    normal_file_hs = program_dir + @file_name
-    arguments_file_hs = program_dir + @arguments_file_name
+    normal_file_hs = program_dir + self.file_name
+    arguments_file_hs = program_dir + self.arguments_file_name
     
-    File.open(normal_file_hs, 'w') { |file|
+    File.open(normal_file_hs, 'w') do |file|
       file.write(uploaded_file.read)
       file.close
-    }
+    end
     
     File.open(arguments_file_hs, 'w') do |file|
       file.write(arguments_file.read)
       file.close
     end
   end
-  
+   
   def compiles?
-    normal_file_hs = PROGRAMS_DIR + @folder_name + @file_name
-    normal_object = PROGRAMS_DIR + @folder_name + Program.get_chomped_file_name(@file_name)
-    compile = `#{Haskell.path} --make #{normal_file_hs} -i#{Program::PROGRAMS_DIR + @folder_name}`
-    File.exist?(normal_object)
+    normal_file_hs = PROGRAMS_DIR + self.folder_name + self.file_name
+    normal_object = PROGRAMS_DIR + self.folder_name + Program.get_chomped_file_name(self.file_name)
+    
+    sin, sout, serr = Open3.popen3("#{Haskell.path} --make #{normal_file_hs} -i#{Program::PROGRAMS_DIR + self.folder_name}")
+    error = serr.read
+
+    unless error.empty? #only do this if there's no error
+      error =~ ERROR_REGEX
+      self.errors[:base] << "Your program didn't compile\nThe compiler error was:\n#{$1.to_s}"
+    end
+    error.empty?
   end
   
   def remove_files!
-    FileUtils.rm_rf(PROGRAMS_DIR + @folder_name)
+    FileUtils.rm_rf(PROGRAMS_DIR + self.folder_name)
   end
 end
