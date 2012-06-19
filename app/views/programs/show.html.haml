@@ -7,27 +7,8 @@
     %b Program Name:
     = @program.name
 
-%p
-    %b Size (kB):
-    = @program.size
-
-%p
-    %b Lines of Code:
-    = @program.lines
-
-
-- if @current_user
-    = form_for @new_timing do |f|
-        = f.hidden_field :user_id, :value => @current_user.id.to_s
-        = f.hidden_field :program_id, :value => @program.id.to_s
-        
-        = f.label :arguments 
-        = f.text_field :arguments
-        
-        = f.submit
-
-- @program.timings.each do |t|
-    = t.id
+- if @program.run
+    = @program.run.id
 
 
 = link_to 'Back', programs_path

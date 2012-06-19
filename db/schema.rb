@@ -15,6 +15,7 @@ ActiveRecord::Schema.define(:version => 20120618211028) do
   create_table "programs", :force => true do |t|
     t.integer  "user_id"
     t.string   "name"
+    t.string   "folder_name"
     t.string   "file_name"
     t.string   "arguments_file_name"
     t.integer  "size"

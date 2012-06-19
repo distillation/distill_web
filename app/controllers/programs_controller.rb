@@ -1,10 +1,7 @@
 class ProgramsController < ApplicationController
   before_filter :require_user, :only => [:new, :create, :destroy]
   before_filter :current_user, :only => [:show]
-  FILES_ROOT = Rails.root.to_s + "/public/files/"
-  INPUT_DIR = FILES_ROOT + "inputs/"
-  SUPER_DIR = FILES_ROOT + "super/" 
-  DISTILL_DIR = FILES_ROOT + 'distill/' 
+   
   
   NAIVE_REVERSE = <<-END
     module Main where
@@ -37,6 +34,11 @@ class ProgramsController < ApplicationController
     3 -> [100..1000]
   END
   
+  def initialize
+    super
+    @naive_reverse_code = NAIVE_REVERSE
+    @arguments_code = ARGUMENTS
+  end
   
   # GET /programs
   # GET /programs.json
@@ -69,9 +71,6 @@ class ProgramsController < ApplicationController
     @program = Program.new
     @program.user_id = @current_user.id
     
-    @naive_reverse = NAIVE_REVERSE
-    @arguments = ARGUMENTS
-    
     respond_to do |format|
       format.html # new.html.erb
       format.json { render :json => @program }
@@ -82,55 +81,20 @@ class ProgramsController < ApplicationController
   # POST /programs.json
   def create
     @program = Program.new(params[:program])
-    @program.user_id = @current_user.id
-    uploaded_file = params[:program][:file]
+    @program.user = @current_user
     
-    if File.extname(uploaded_file.original_filename).eql?('.hs')    
-      chomped_file_name = uploaded_file.original_filename.chomp(File.extname(uploaded_file.original_filename))
-    
-      #account for previously existing directories of the same name
-      #TODO: Better solution.
-      if File.exists?(INPUT_DIR + chomped_file_name + '.hs')
-        i = 1
-        while File.exists?(INPUT_DIR + chomped_file_name + i.to_s + '.hs')
-          i += 1
-        end
-        chomped_file_name << i.to_s
-      end
+    if File.extname(params[:program][:file].original_filename).eql?('.hs')    
+      @program.save_file!(params[:program][:file], params[:program][:arguments])
       
-      @program.file_name = chomped_file_name + '.hs'
-      
-      #Save uploaded file
-      transformer_file = FILES_ROOT + chomped_file_name
-      normal_file_hs = INPUT_DIR + @program.file_name
-      File.open(normal_file_hs, 'w') { |file|
-        file.write(uploaded_file.read)
-        file.close
-      }
-      
-      `#{Haskell.transformer} super #{transformer_file}`
-      
-      if File.exists?(SUPER_DIR + @program.file_name)
-      
-        @program.lines = `wc -l #{normal_file_hs}`.to_i
-        @program.size = File.size(normal_file_hs) / 1000 #size in kB
-        @program.size = 1 if @program.size == 0
-        
-        respond_to do |format|
-          if @program.save
-            format.html { redirect_to @program, :notice => 'Program was successfully created.' }
-            format.json { render :json => @program, :status => :created, :location => @program }
-          else
-            format.html { render :action => "new" }
-            format.json { render :json => @program.errors, :status => :unprocessable_entity }
-          end
-        end
-      else
-        File.delete normal_file_hs
-        
-        respond_to do |format|
-            format.html { render :action => "new" }
-            format.json { render :action => @program.errors, :status => :unprocessable_entity }
+      respond_to do |format|
+        if @program.compiles? && @program.save
+          format.html { redirect_to @program, :notice => 'Program was successfully created.' }
+          format.json { render :json => @program, :status => :created, :location => @program }
+        else
+          @program.remove_files!
+          
+          format.html { render :action => "new" }
+          format.json { render :json => @program.errors, :status => :unprocessable_entity }
         end
       end
     else

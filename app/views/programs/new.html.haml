@@ -1,3 +1,13 @@
+- if @program.errors.any?
+  #error_explanation
+    %h2
+      = pluralize(@program.errors.count, "error")
+      prohibited this program from being saved
+    %ul
+      - @program.errors.full_messages.each do |msg|
+        %li
+          = msg
+
 .upper_left_small
   %h2
     Create A New Program
@@ -88,14 +98,14 @@
   %p
     The example file below shows how to provide us with a file that has everything we need to transform and benchmark your program.
   %pre{:class => 'brush: haskell', :title => 'NaiveReverse.hs'}
-    = @naive_reverse
+    = Program.naive_reverse_code
   
   .text_example_outer
     .text_example_inner
       %p
         The below file is a simple example of how arguments should be computed for benchmarking. As the benchmark level increases, so does the complexity of the randomly generated data.
   %pre{:class => 'brush: haskell', :title => 'Arguments.hs'}
-    = @arguments
+    = Program.arguments_code
   
   .text_example_outer
     .text_example_inner  
