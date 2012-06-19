@@ -155,7 +155,6 @@ div.content div.right {
 	left: 52%;
 	text-align: justify;
 	font-size: 90%;
-	overflow: auto;
 }
 
 div.content div.right p {
@@ -174,7 +173,6 @@ div.content div.upper_left_small {
 	border-bottom: 1px inset #013953;
 	border-right: 1px inset #013953;
 	border-left: 1px outset #013953;
-	overflow: auto;
 }
 
 div.content div.lower_left_large {
@@ -188,7 +186,6 @@ div.content div.lower_left_large {
 	border-bottom: 1px inset #013953;
 	border-right: 1px inset #013953;
 	border-left: 1px outset #013953;
-	overflow: auto;
 }
 
 div.content div.lower_left_large ul li {
