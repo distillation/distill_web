@@ -50,6 +50,7 @@ class ProgramsController < ApplicationController
       
       respond_to do |format|
         if @program.compiles? && @program.save
+          @program.asynch_benchmark_program
           format.html { redirect_to @program, :notice => 'Program was successfully created.' }
           format.json { render :json => @program, :status => :created, :location => @program }
         else

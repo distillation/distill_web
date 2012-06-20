@@ -99,4 +99,8 @@ class Program < ActiveRecord::Base
   def remove_files!
     FileUtils.rm_rf(PROGRAMS_DIR + self.folder_name)
   end
+  
+  def asynch_benchmark_program
+    Resque.enqueue(Run, self.id.to_s)
+  end
 end

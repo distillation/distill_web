@@ -11,4 +11,13 @@ class Run < ActiveRecord::Base
   validates :super_size, :presence => true
   validates :program_id, :presence => true
   validates :user_id, :presence => true
+  
+  @queue = :benchmarks_queue
+  
+  def self.perform(id)
+    puts "called"
+    puts id.to_s
+    @program = Program.find(id)
+    puts @program.file_name
+  end
 end

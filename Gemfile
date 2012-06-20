@@ -5,9 +5,9 @@ gem 'haml-rails'
 # Bundle edge Rails instead:
 # gem 'rails', :git => 'git://github.com/rails/rails.git'
 gem 'authlogic'
-gem 'sqlite3'
 gem 'mysql2'
 gem 'json'
+gem 'resque'
 
 # Gems used only for assets and not required
 # in production environments by default.
