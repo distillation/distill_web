@@ -18,8 +18,6 @@ ActiveRecord::Schema.define(:version => 20120618211028) do
     t.string   "folder_name"
     t.string   "file_name"
     t.string   "arguments_file_name"
-    t.integer  "size"
-    t.integer  "lines"
     t.integer  "number_of_levels"
     t.integer  "number_of_runs"
     t.datetime "created_at",          :null => false
@@ -47,14 +45,14 @@ ActiveRecord::Schema.define(:version => 20120618211028) do
   create_table "runs", :force => true do |t|
     t.integer  "user_id"
     t.integer  "program_id"
-    t.decimal  "ghc_compile_time"
-    t.decimal  "super_compile_time"
-    t.decimal  "distill_compile_time"
+    t.decimal  "ghc_compile_time",     :precision => 10, :scale => 0
+    t.decimal  "super_compile_time",   :precision => 10, :scale => 0
+    t.decimal  "distill_compile_time", :precision => 10, :scale => 0
     t.integer  "ghc_size"
     t.integer  "super_size"
     t.integer  "distill_size"
-    t.datetime "created_at",           :null => false
-    t.datetime "updated_at",           :null => false
+    t.datetime "created_at",                                          :null => false
+    t.datetime "updated_at",                                          :null => false
   end
 
   create_table "user_sessions", :force => true do |t|
