@@ -2,14 +2,14 @@ class Program < ActiveRecord::Base
   belongs_to :user
   has_one :run
   accepts_nested_attributes_for :user
-  attr_accessible :user_id, :name, :file_name, :arguments_file_name, :number_of_levels, :number_of_runs, :file, :arguments_file, :arguments, :folder_name
+  attr_accessible :user_id, :name, :normal_file_name, :normal_file_contents, :arguments_file_name, :number_of_levels, :number_of_runs, :file, :arguments_file_contents, :arguments, :folder_name, :super_file_contents
+  attr_accessible :distill_file_contents
   validates :user_id, :presence => true
   validates :name, :presence => true
-  validates :file_name, :presence => true
+  validates :normal_file_name, :presence => true
   validates :arguments_file_name, :presence => true
   validates :number_of_levels, :presence => true
   validates :number_of_runs, :presence => true
-  validates :folder_name, :presence => true
   attr_accessor :file, :arguments
   
   FILES_ROOT = Rails.root.to_s + "/public/"
@@ -61,30 +61,36 @@ class Program < ActiveRecord::Base
   end
   
   def save_file!(uploaded_file, arguments_file)
-    self.folder_name =  (Program.count + 1).to_s + '/'
-    self.file_name = uploaded_file.original_filename
+    self.normal_file_name = uploaded_file.original_filename
     self.arguments_file_name = arguments_file.original_filename
-    
-    program_dir = PROGRAMS_DIR + self.folder_name
+
+    program_dir = PROGRAMS_DIR + folder_name
     Dir.mkdir(program_dir)
     
-    normal_file_hs = program_dir + self.file_name
+    normal_file_hs = program_dir + self.normal_file_name
     arguments_file_hs = program_dir + self.arguments_file_name
     
+    self.normal_file_contents = uploaded_file.read
+    self.arguments_file_contents = arguments_file.read
+    
     File.open(normal_file_hs, 'w') do |file|
-      file.write(uploaded_file.read)
+      file.write(self.normal_file_contents)
       file.close
     end
     
     File.open(arguments_file_hs, 'w') do |file|
-      file.write(arguments_file.read)
+      file.write(self.arguments_file_contents)
       file.close
     end
   end
+  
+  def folder_name
+    (self.id.nil? ? (Program.count + 1) : self.id).to_s + '/'
+  end
    
   def compiles?
-    normal_file_hs = PROGRAMS_DIR + self.folder_name + self.file_name
-    normal_object = PROGRAMS_DIR + self.folder_name + Program.get_chomped_file_name(self.file_name)
+    normal_file_hs = PROGRAMS_DIR + folder_name + self.normal_file_name
+    normal_object = PROGRAMS_DIR + folder_name + Program.get_chomped_file_name(self.normal_file_name)
     
     sin, sout, serr = Open3.popen3("#{Haskell.path} --make #{normal_file_hs} -i#{Program::PROGRAMS_DIR + self.folder_name}")
     error = serr.read
@@ -97,7 +103,7 @@ class Program < ActiveRecord::Base
   end
   
   def remove_files!
-    FileUtils.rm_rf(PROGRAMS_DIR + self.folder_name)
+    FileUtils.rm_rf(PROGRAMS_DIR + folder_name + '/')
   end
   
   def asynch_benchmark_program

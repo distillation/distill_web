@@ -47,27 +47,28 @@ class ProgramsController < ApplicationController
     
     if File.extname(params[:program][:file].original_filename).eql?('.hs')    
       @program.save_file!(params[:program][:file], params[:program][:arguments])
-      
-      respond_to do |format|
-        if @program.compiles? && @program.save
-          @program.asynch_benchmark_program
-          format.html { redirect_to @program, :notice => 'Program was successfully created.' }
-          format.json { render :json => @program, :status => :created, :location => @program }
-        else
-          @program.remove_files!
-          
-          format.html { render :action => "new" }
-          format.json { render :json => @program.errors, :status => :unprocessable_entity }
+      if @program.compiles?
+        respond_to do |format|
+          if @program.save
+            @program.remove_files!
+            @program.asynch_benchmark_program
+            format.html { redirect_to @program, :notice => 'Program was successfully created.' }
+            format.json { render :json => @program, :status => :created, :location => @program }
+          else
+            @program.remove_files!
+            format.html { render :action => "new" }
+            format.json { render :action => @program.errors, :status => :unprocessable_entity }
+          end
         end
-      end
-    else
-      respond_to do |format|
-        format.html { render :action => "new" }
-        format.json { render :action => @program.errors, :status => :unprocessable_entity }
+      else
+        @program.remove_files!
+        respond_to do |format|
+          format.html { render :action => "new" }
+          format.json { render :action => @program.errors, :status => :unprocessable_entity }
+        end  
       end
     end
   end
-
 
   # DELETE /programs/1
   # DELETE /programs/1.json
