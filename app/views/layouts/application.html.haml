@@ -1,18 +1,40 @@
-!!!
-%html
-    %head
-        %title Transformation Benchmarks
-        = stylesheet_link_tag "application", :media => "all"
-        = stylesheet_link_tag "shCore"
-        = stylesheet_link_tag "shThemeEclipse"
-        = javascript_include_tag "application"
-        = javascript_include_tag "shBrushHaskell"
-        = csrf_meta_tags
-    %body
-        .content
-            = render :partial => 'shared/header'
+!!! 5
+%html(lang="en")
+  %head
+    %meta(charset="utf-8")
+    %meta(http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1")
+    %meta(name="viewport" content="width=device-width, initial-scale=1.0")
+    %title= content_for?(:title) ? yield(:title) : "DistillWeb"
+    = csrf_meta_tags
+    / Le HTML5 shim, for IE6-8 support of HTML elements
+    /[if lt IE 9]
+      = javascript_include_tag "http://html5shim.googlecode.com/svn/trunk/html5.js"
+    = stylesheet_link_tag "application", :media => "all"
+    = stylesheet_link_tag "prettify"
+    
+    %link(href="images/apple-touch-icon-144x144.png" rel="apple-touch-icon-precomposed" sizes="144x144")
+    %link(href="images/apple-touch-icon-114x114.png" rel="apple-touch-icon-precomposed" sizes="114x114")
+    %link(href="images/apple-touch-icon-72x72.png" rel="apple-touch-icon-precomposed" sizes="72x72")
+    %link(href="images/apple-touch-icon.png" rel="apple-touch-icon-precomposed")
+    %link(href="images/favicon.ico" rel="shortcut icon")
+
+
+  %body
+    =render :partial => 'shared/header'
+
+    .container
+      .content
+        .row
+          .span12
             = yield
-            = render :partial => 'shared/footer'
-        %script{:type => 'text/javascript'}
-            SyntaxHighlighter.defaults['toolbar'] = false;
-            SyntaxHighlighter.all();
+    
+    =render :partial => 'shared/footer'
+    /
+      Javascripts
+      \==================================================
+    / Placed at the end of the document so the pages load faster
+    = javascript_include_tag "application"
+    = javascript_include_tag "prettify"
+    
+    %script{:type => 'text/javascript'}
+      $(function() {prettyPrint();});

@@ -18,35 +18,35 @@ class Program < ActiveRecord::Base
   ERROR_REGEX = /.+\/(.+\.hs.*\n.+)/
   
   NAIVE_REVERSE = <<-END
-    module Main where
+module Main where
 
-  import System.Environment (getArgs)
-  import Arguments
+import System.Environment (getArgs)
+import Arguments
+   
+main = do
+  args <- getArgs
+  let level = read (head args) :: Int
+  print $ root (randomXS level)
     
-  main = do
-    args <- getArgs
-    let level = read (head args) :: Int
-    print $ root (randomXS level)
+root = \\xs -> nrev xs
     
-  root = \\xs -> nrev xs
-    
-  nrev = \\xs -> case xs of
-    [] -> []
-    (y:ys) -> app (nrev ys) [y]
-    
-  app = \\xs ys -> case xs of
-    [] -> ys
-    (z:zs) -> (z:app zs ys)
+nrev = \\xs -> case xs of
+  [] -> []
+  (y:ys) -> app (nrev ys) [y]
+  
+app = \\xs ys -> case xs of
+  [] -> ys
+  (z:zs) -> (z:app zs ys)
   END
   
   ARGUMENTS = <<-END
-    module Arguments where
-  
-  randomXS = \\level -> case level of
-    1 -> [1..10]
-    2 -> [10..100]
-    3 -> [100..1000]
-  END
+module Arguments where
+
+randomXS = \\level -> case level of
+  1 -> [1..10]
+  2 -> [10..100]
+  3 -> [100..1000]
+END
   
   def self.naive_reverse_code
     NAIVE_REVERSE

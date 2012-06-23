@@ -38,6 +38,11 @@ class ProgramsController < ApplicationController
       format.json { render :json => @program }
     end
   end
+  
+  def edit
+    @program = Program.find(params[:id])
+  end
+  
 
   # POST /programs
   # POST /programs.json

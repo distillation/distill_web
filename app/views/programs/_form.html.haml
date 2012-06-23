@@ -1,0 +1,44 @@
+= form_for @program, :html => { :class => 'form-horizontal' } do |f|
+  .control-group
+    = f.label :user_id, :class => 'control-label'
+    .controls
+      = f.number_field :user_id, :class => 'number_field'
+  .control-group
+    = f.label :name, :class => 'control-label'
+    .controls
+      = f.text_field :name, :class => 'text_field'
+  .control-group
+    = f.label :normal_file_name, :class => 'control-label'
+    .controls
+      = f.text_field :normal_file_name, :class => 'text_field'
+  .control-group
+    = f.label :normal_file_contents, :class => 'control-label'
+    .controls
+      = f.text_field :normal_file_contents, :class => 'text_field'
+  .control-group
+    = f.label :super_file_contents, :class => 'control-label'
+    .controls
+      = f.text_field :super_file_contents, :class => 'text_field'
+  .control-group
+    = f.label :distill_file_contents, :class => 'control-label'
+    .controls
+      = f.text_field :distill_file_contents, :class => 'text_field'
+  .control-group
+    = f.label :arguments_file_name, :class => 'control-label'
+    .controls
+      = f.text_field :arguments_file_name, :class => 'text_field'
+  .control-group
+    = f.label :arguments_file_contents, :class => 'control-label'
+    .controls
+      = f.text_field :arguments_file_contents, :class => 'text_field'
+  .control-group
+    = f.label :number_of_levels, :class => 'control-label'
+    .controls
+      = f.number_field :number_of_levels, :class => 'number_field'
+  .control-group
+    = f.label :number_of_runs, :class => 'control-label'
+    .controls
+      = f.number_field :number_of_runs, :class => 'number_field'
+  .form-actions
+    = f.submit nil, :class => 'btn btn-primary'
+    = link_to t('.cancel', :default => t("helpers.links.cancel")), programs_path, :class => 'btn'
