@@ -22,7 +22,7 @@
       .span6
         .row
           .span6
-            = form_for @program, :html => { :class => 'form-horizontal' } do |f|
+            = form_for @program, :html => { :class => 'well form-horizontal' } do |f|
               .control-group
                 = f.label :name, :class => 'control-label'
                 .controls
@@ -101,14 +101,14 @@
       .span6
         %p
           The example file below shows how to provide us with a file that has everything we need to transform and benchmark your program.
-        %pre.prettyprint.linenums
+        %pre{:class => 'brush: haskell'}
           = Program.naive_reverse_code
         
         .text_example_outer
           .text_example_inner
             %p
               The below file is a simple example of how arguments should be computed for benchmarking. As the benchmark level increases, so does the complexity of the randomly generated data.
-        %pre.prettyprint.linenums
+        %pre{:class => 'brush: haskell'}
           = Program.arguments_code
         
         .text_example_outer

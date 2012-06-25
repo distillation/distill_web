@@ -5,9 +5,40 @@
         %span.icon-bar
         %span.icon-bar
         %span.icon-bar
-      %a.brand(href="#") DistillWeb
-      .container.nav-collapse
+      = link_to 'Distillr', programs_url, {"class" => 'brand'}
+      .nav-collapse
         %ul.nav
-          %li= link_to "Link 1", "/path1"
-          %li= link_to "Link 2", "/path2"
-          %li= link_to "Link 3", "/path3"
+          %li.dropdown
+            = link_to 'Programs', root_url, {"data-toggle" => "dropdown", :href => ''}
+            %ul.dropdown-menu
+              %li
+                = link_to 'All Programs', programs_url
+              - if current_user
+                %li
+                  = link_to 'My Programs', user_programs_path(current_user)
+                %li
+                  = link_to 'New Program', new_program_path
+        %ul.nav.pull-right
+          - if current_user
+            %li.dropdown
+              = link_to 'Logout', logout_path
+          - else
+            %li.dropdown
+              = link_to 'Login', login_path, {"data-toggle" => "dropdown", :href => ''}
+              %ul.dropdown-menu
+                = form_for UserSession.new do |f|
+                  = f.text_field :username, :placeholder => 'Username', :class => 'text-field'
+                  = f.password_field :password, :placeholder => 'Password', :class => 'password-field'
+                  .pull-right
+                    = f.submit 'Login', :class => 'btn btn-primary'
+            %li.dropdown
+              = link_to 'Register', new_user_path, {"data-toggle" => "dropdown", :href => ''}
+              %ul.dropdown-menu
+                = form_for User.new do |f|
+                  = f.text_field :username, :placeholder => 'Username', :class => 'text-field'
+                  = f.text_field :email, :placeholder => 'Email', :class => 'text-field'
+                  = f.password_field :password, :placeholder => 'Password', :class => 'password-field'
+                  = f.password_field :password, :placeholder => 'Confirm Password', :class => 'password-field'
+                  .pull-right
+                    = f.submit 'Create', :class => 'btn btn-primary'
+          

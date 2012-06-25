@@ -17,43 +17,44 @@ class Program < ActiveRecord::Base
   
   ERROR_REGEX = /.+\/(.+\.hs.*\n.+)/
   
-  NAIVE_REVERSE = <<-END
+  NAIVE_REVERSE = 
+<<-END
 module Main where
-
 import System.Environment (getArgs)
-import Arguments
-   
-main = do
-  args <- getArgs
-  let level = read (head args) :: Int
-  print $ root (randomXS level)
+  import Arguments
     
-root = \\xs -> nrev xs
+  main = do
+    args <- getArgs
+    let level = read (head args) :: Int
+    print $ root (randomXS level)
     
-nrev = \\xs -> case xs of
-  [] -> []
-  (y:ys) -> app (nrev ys) [y]
-  
-app = \\xs ys -> case xs of
-  [] -> ys
-  (z:zs) -> (z:app zs ys)
+  root = \\xs -> nrev xs
+    
+  nrev = \\xs -> case xs of
+    [] -> []
+    (y:ys) -> app (nrev ys) [y]
+    
+  app = \\xs ys -> case xs of
+    [] -> ys
+    (z:zs) -> (z:app zs ys)
   END
   
   ARGUMENTS = <<-END
-module Arguments where
-
-randomXS = \\level -> case level of
-  1 -> [1..10]
-  2 -> [10..100]
-  3 -> [100..1000]
-END
+    module Arguments where
+  
+  randomXS = \\level -> case level of
+    1 -> [1..10]
+    2 -> [10..100]
+    3 -> [100..1000]
+  END
   
   def self.naive_reverse_code
-    NAIVE_REVERSE
+    "module Main where\r\rimport System.Environment (getArgs)\rimport Arguments\r\rmain = do\r  args <- getArgs\r  let level = read (head args) :: Int\r  print $ root (randomXS level)\r\r" +
+    "root = \\xs -> nrev xs\r\rnrev = \\xs -> case xs of\r  [] -> []\r  (y:ys) -> app (nrev ys) [y]\r\rapp = \\xs ys -> case xs of\r  [] -> ys\r  (z:zs) -> (z:app zs ys)"
   end
   
   def self.arguments_code
-    ARGUMENTS
+    "module Arguments where\r\rrandomXS = \\level -> case level of\r  1 -> [1..10]\r  2 -> [10..100]\r  3 -> [100..1000]"
   end
   
   def self.get_chomped_file_name(file_name)

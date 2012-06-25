@@ -5,14 +5,10 @@ class ProgramsController < ApplicationController
   # GET /programs
   # GET /programs.json
   def index
-    if (request.filtered_parameters["user_id"])
-      @user = User.find(request.filtered_parameters["user_id"])
-    end
     @programs = Program.all
 
     respond_to do |format|
       format.html # index.html.erb
-      format.json { render :json => @programs }
     end
   end
 

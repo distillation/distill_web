@@ -11,3 +11,11 @@
  *= require_self
  *= require_tree .
 */
+
+ul .dropdown-menu form input {
+    margin: 8px;
+}
+
+ul .dropdown-menu form input.btn {
+    margin-right: 8px;
+}
