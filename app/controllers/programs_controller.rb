@@ -34,11 +34,6 @@ class ProgramsController < ApplicationController
       format.json { render :json => @program }
     end
   end
-  
-  def edit
-    @program = Program.find(params[:id])
-  end
-  
 
   # POST /programs
   # POST /programs.json
@@ -46,17 +41,35 @@ class ProgramsController < ApplicationController
     @program = Program.new(params[:program])
     @program.user = @current_user
     
-    if File.extname(params[:program][:file].original_filename).eql?('.hs')    
+    if (params[:program][:file].nil?)
+      @program.errors[:file] << "You must upload a program file"
+      if (params[:program][:arguments].nil?)
+        @program.errors[:arguments]  << "You must also upload an arguments file"
+      end
+      @program.valid?
+      
+      respond_to do |format|
+        format.html { render :action => "new" }
+        format.json { render :action => @program.errors, :status => :unprocessable_entity }
+      end
+    elsif (params[:program][:arguments].nil?)
+      @program.errors[:arguments] << "You must upload an arguments file"
+      @program.valid?
+      
+      respond_to do |format|
+        format.html { render :action => "new" }
+        format.json { render :action => @program.errors, :status => :unprocessable_entity }
+      end
+    elsif File.extname(params[:program][:file].original_filename).eql?('.hs')    
       @program.save_file!(params[:program][:file], params[:program][:arguments])
       if @program.compiles?
+        @program.remove_files!
         respond_to do |format|
           if @program.save
-            @program.remove_files!
             @program.asynch_benchmark_program
             format.html { redirect_to @program, :notice => 'Program was successfully created.' }
             format.json { render :json => @program, :status => :created, :location => @program }
           else
-            @program.remove_files!
             format.html { render :action => "new" }
             format.json { render :action => @program.errors, :status => :unprocessable_entity }
           end

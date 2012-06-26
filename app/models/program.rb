@@ -6,10 +6,10 @@ class Program < ActiveRecord::Base
   attr_accessible :distill_file_contents
   validates :user_id, :presence => true
   validates :name, :presence => true
-  validates :normal_file_name, :presence => true
-  validates :arguments_file_name, :presence => true
   validates :number_of_levels, :presence => true
   validates :number_of_runs, :presence => true
+  validates :file, :presence => true
+  validates :arguments, :presence => true
   attr_accessor :file, :arguments
   
   FILES_ROOT = Rails.root.to_s + "/public/"
@@ -100,6 +100,7 @@ import System.Environment (getArgs)
       error =~ ERROR_REGEX
       self.errors[:base] << "Your program didn't compile\nThe compiler error was:\n#{$1.to_s}"
     end
+    remove_files!
     error.empty?
   end
   

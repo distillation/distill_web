@@ -56,4 +56,15 @@ module DistillWeb
     # Version of your assets, change this if you want to expire all your assets
     config.assets.version = '1.0'
   end
+  
+  ActionView::Base.field_error_proc = Proc.new do |html_tag, instance|
+   puts "ht: " + html_tag
+   html = %(<div class="error">#{HTML}</div>)
+   # add nokogiri gem to Gemfile
+   elements = Nokogiri::HTML::DocumentFragment.parse(html_tag).css "label, input, file"
+   elements.each do |e|
+    html.gsub!('HTML', e.to_s)
+   end
+   html.html_safe
+  end
 end

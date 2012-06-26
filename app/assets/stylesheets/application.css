@@ -19,3 +19,17 @@ ul .dropdown-menu form input {
 ul .dropdown-menu form input.btn {
     margin-right: 8px;
 }
+
+.control-group .error label {
+    color: #B94A48;
+}
+
+.control-group .error input {
+    border-color: #B94A48;
+    color: #B94A48;
+}
+
+.control-group .error input:focus {
+    border-color: #953B39;
+    box-shadow: 0 0 6px #D59392;
+}

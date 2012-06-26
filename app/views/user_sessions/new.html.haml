@@ -1,38 +1,30 @@
 .page-header
-  %h1 Register a new account
+  %h1 Login to your account
 
-- if @user.errors.any?
+- if @user_session.errors.any?
   .alert.alert-error.fade.in
     %a.close(data-dismiss="alert" href="#")
       x
     %h2
-      = pluralize(@user.errors.count, "error")
-      prevented you from creating an account
+      = pluralize(@user_session.errors.count, "error")
+      prevented you from logging in
     %ul
-      - @user.errors.full_messages.each do |msg|
+      - @user_session.errors.full_messages.each do |msg|
         %li
           = msg
 
 
 .row
   .span6.offset3
-    = form_for @user, :html => { :class => 'well form-horizontal' } do |f|
+    = form_for @user_session, :html => { :class => 'well form-horizontal' } do |f|
       .control-group
         = f.label :username, :class => 'control-label'
         .controls
           = f.text_field :username, :class => 'text-field'
       .control-group
-        = f.label :email, :class => 'control-label'
-        .controls
-          = f.text_field :email, :class => 'text-field'
-      .control-group
         = f.label :password, :class => 'control-label'
         .controls
           = f.password_field :password, :class => 'password-field'
-      .control-group
-        = f.label :password_confirmation, :class => 'control-label'
-        .controls
-          = f.password_field :password_confirmation, :class => 'password-field'
       .form-actions
         .pull-right
           = f.submit nil, :class => 'btn btn-primary'

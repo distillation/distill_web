@@ -27,6 +27,16 @@
   %body
     =render :partial => 'shared/header'
 
+    - unless flash.empty?
+      .container
+        .row
+          .span12
+            - flash.each do |type, message|
+              .alert.fade.in{ "data-alert" => "alert", :class => "alert-" + twitterized_type(type) }
+                %a.close(data-dismiss="alert" href="#") 
+                  ×
+                = message
+
     .container
       .content
         .row
@@ -45,3 +55,4 @@
       SyntaxHighlighter.all();
       $('.dropdown-toggle').dropdown();
       $('.dropdown-menu').find('form').click(function (e) {e.stopPropagation();});
+      $('.alert').alert();

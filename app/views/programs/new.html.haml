@@ -1,20 +1,18 @@
 - model_class = Program
 .page-header
   %h1 Create A New Program
+
 - if @program.errors.any?
-  #error_explanation
+  .alert.alert-error.fade.in
+    %a.close(data-dismiss="alert" href="#")
+      x
     %h2
       = pluralize(@program.errors.count, "error")
-      prohibited this program from being saved
+      prevented you from creating a new program
     %ul
       - @program.errors.full_messages.each do |msg|
         %li
           = msg
-
-  .control-group
-    = f.label :user_id, :class => 'control-label'
-    .controls
-      = f.number_field :user_id, :class => 'number_field'
 
 .row
   .span12
@@ -26,13 +24,13 @@
               .control-group
                 = f.label :name, :class => 'control-label'
                 .controls
-                  = f.text_field :name, :class => 'text_field'
+                  = f.text_field :name, :class => 'text-field'
               .control-group
-                = f.label :program_file, :class => 'control-label'
+                = f.label :file, "Program File", :class => 'control-label'
                 .controls
                   = f.file_field :file, :class => 'file-field'
               .control-group
-                = f.label :arguments_file, :class => 'control-label'
+                = f.label :arguments, "Arguments File", :class => 'control-label'
                 .controls
                   = f.file_field :arguments, :class => 'file-field'
               .control-group
