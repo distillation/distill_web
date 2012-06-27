@@ -54,6 +54,7 @@ ActiveRecord::Schema.define(:version => 20120618211028) do
     t.integer  "ghc_size"
     t.integer  "super_size"
     t.integer  "distill_size"
+    t.integer  "level_number"
     t.datetime "created_at",                                          :null => false
     t.datetime "updated_at",                                          :null => false
   end
