@@ -9,6 +9,7 @@ class CreateRuns < ActiveRecord::Migration
       t.integer :ghc_size
       t.integer :super_size
       t.integer :distill_size
+      t.integer :level_number
 
       t.timestamps
     end

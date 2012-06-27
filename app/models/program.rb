@@ -1,6 +1,6 @@
 class Program < ActiveRecord::Base
   belongs_to :user
-  has_one :run
+  has_many :run
   accepts_nested_attributes_for :user
   attr_accessible :user_id, :name, :normal_file_name, :normal_file_contents, :arguments_file_name, :number_of_levels, :number_of_runs, :file, :arguments_file_contents, :arguments, :folder_name, :super_file_contents
   attr_accessible :distill_file_contents
@@ -109,6 +109,8 @@ import System.Environment (getArgs)
   end
   
   def asynch_benchmark_program
-    Resque.enqueue(Run, self.id.to_s)
+    self.number_of_levels.times do |i|
+      Resque.enqueue(Run, self.id.to_s, (i + 1).to_s)
+    end
   end
 end
