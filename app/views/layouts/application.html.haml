@@ -29,8 +29,8 @@
 
     - unless flash.empty?
       .container
-        .row
-          .span12
+        .content
+          .row
             - flash.each do |type, message|
               .alert.fade.in{ "data-alert" => "alert", :class => "alert-" + twitterized_type(type) }
                 %a.close(data-dismiss="alert" href="#") 
@@ -40,8 +40,7 @@
     .container
       .content
         .row
-          .span12
-            = yield
+          = yield
     
     =render :partial => 'shared/footer'
     /

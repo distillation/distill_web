@@ -1,13 +1,9 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
-
 one:
+  id: 2
   user_id: 1
-  name: MyString
-  size: 1
-  lines: 1
-
-two:
-  user_id: 1
-  name: MyString
-  size: 1
-  lines: 1
+  name: Naive Reverse
+  normal_file_contents: blah
+  arguments_file_contents: blah
+  number_of_levels: 5
+  number_of_runs: 5

@@ -1,49 +1,64 @@
 - model_class = Program
 .page-header
-  %h1=t '.title', :default => model_class.model_name.human
+  %h1=t '.title', :default => @program.name
 
-%p
-  %strong= model_class.human_attribute_name(:user_id) + ':'
-  %br
-  = @program.user_id
-%p
-  %strong= model_class.human_attribute_name(:name) + ':'
-  %br
-  = @program.name
-%p
-  %strong= model_class.human_attribute_name(:normal_file_name) + ':'
-  %br
-  = @program.normal_file_name
-%p
-  %strong= model_class.human_attribute_name(:normal_file_contents) + ':'
-  %br
-  = @program.normal_file_contents
-%p
-  %strong= model_class.human_attribute_name(:super_file_contents) + ':'
-  %br
-  = @program.super_file_contents
-%p
-  %strong= model_class.human_attribute_name(:distill_file_contents) + ':'
-  %br
-  = @program.distill_file_contents
-%p
-  %strong= model_class.human_attribute_name(:arguments_file_name) + ':'
-  %br
-  = @program.arguments_file_name
-%p
-  %strong= model_class.human_attribute_name(:arguments_file_contents) + ':'
-  %br
-  = @program.arguments_file_contents
-%p
-  %strong= model_class.human_attribute_name(:number_of_levels) + ':'
-  %br
-  = @program.number_of_levels
-%p
-  %strong= model_class.human_attribute_name(:number_of_runs) + ':'
-  %br
-  = @program.number_of_runs
+.row
+  .span12
+    .row 
+      .span6
+        %ul.nav.nav-tabs
+          %li.active
+            = link_to 'Input'
+        %pre{:class => 'brush: haskell'}
+          = @program.normal_file_contents.gsub("\n","\r")
+      
+      .span6
+        %ul.nav.nav-tabs
+          %li.active
+            = link_to 'Arguments'
+        %pre{:class => 'brush: haskell'}
+          = @program.arguments_file_contents.gsub("\n","\r")                 
+              
+    .row
+      .span12
+        - if @program.run.nil?
+          .alert.alert-info
+            Unfortunately benchmark results are still pending for this program
+        - else
+          .page-header
+            %h2 Run Information
+          .tabbable
+            %ul.nav.nav-tabs
+              %li.active
+                = link_to "Time", "#tab1", {"data-toggle"=>"tab"}
+              %li
+                = link_to "Memory", "#tab2", {"data-toggle" => "tab"}
+            .tab-content
+              .tab-pane.active#tab1
+                %table.table.table-striped
+                  %thead
+                    %tr
+                      %th Level Number
+                      - RunType.find(:all, :order => :id).each do |rl|
+                        %th= rl.name
+                  %tbody  
+                    - @program.levels.each do |level|
+                      %tr
+                        %td= level.to_s
+                        - RunType.find(:all, :order => :id).each do |rl|
+                          %td= @program.average_run_time_by_level_id_and_run_type_id(level, rl.id) 
+              .tab-pane#tab2
+                %table.table.table-striped
+                  %thead
+                    %tr
+                      %th Level Number
+                      - RunType.find(:all, :order => :id).each do |rl|
+                        %th= rl.name
+                  %tbody  
+                    - @program.levels.each do |level|
+                      %tr
+                        %td= level.to_s
+                        - RunType.find(:all, :order => :id).each do |rl|
+                          %td= @program.average_mem_size_by_level_id_and_run_type_id(level, rl.id)       
 
-.form-actions
-  = link_to t('.back', :default => t("helpers.links.back")), programs_path, :class => 'btn'
-  = link_to t('.edit', :default => t("helpers.links.edit")), edit_program_path(@program), :class => 'btn'
-  = link_to t('.destroy', :default => t("helpers.links.destroy")), program_path(@program), :method => "delete", :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')), :class => 'btn btn-danger'
+

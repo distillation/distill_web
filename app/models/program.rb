@@ -1,9 +1,9 @@
 class Program < ActiveRecord::Base
   belongs_to :user
-  has_many :run
+  has_many :run_points, :through => :run
   accepts_nested_attributes_for :user
-  attr_accessible :user_id, :name, :normal_file_name, :normal_file_contents, :arguments_file_name, :number_of_levels, :number_of_runs, :file, :arguments_file_contents, :arguments, :folder_name, :super_file_contents
-  attr_accessible :distill_file_contents
+  attr_accessible :user_id, :name, :normal_file_name, :normal_file_contents, :arguments_file_name, :number_of_levels, :number_of_runs, :file, :arguments_file_contents, :arguments
+  attr_accessible :super_file_contents, :distill_file_contents
   validates :user_id, :presence => true
   validates :name, :presence => true
   validates :number_of_levels, :presence => true
@@ -11,6 +11,10 @@ class Program < ActiveRecord::Base
   validates :file, :presence => true
   validates :arguments, :presence => true
   attr_accessor :file, :arguments
+  
+  @queue = :bencmarks_queue
+  
+  FILE_SIZE_CMD = "ls -la PATH | awk '{print $5}'"
   
   FILES_ROOT = Rails.root.to_s + "/public/"
   PROGRAMS_DIR = FILES_ROOT + "programs/"
@@ -20,41 +24,47 @@ class Program < ActiveRecord::Base
   NAIVE_REVERSE = 
 <<-END
 module Main where
+
 import System.Environment (getArgs)
-  import Arguments
-    
-  main = do
-    args <- getArgs
-    let level = read (head args) :: Int
-    print $ root (randomXS level)
-    
-  root = \\xs -> nrev xs
-    
-  nrev = \\xs -> case xs of
-    [] -> []
-    (y:ys) -> app (nrev ys) [y]
-    
-  app = \\xs ys -> case xs of
-    [] -> ys
-    (z:zs) -> (z:app zs ys)
-  END
+import Arguments
   
-  ARGUMENTS = <<-END
-    module Arguments where
+main = do
+  args <- getArgs
+  let level = read (head args) :: Int
+  print $ root (randomXS level)
   
-  randomXS = \\level -> case level of
-    1 -> [1..10]
-    2 -> [10..100]
-    3 -> [100..1000]
-  END
+root = \\xs -> nrev xs
+  
+nrev = \\xs -> case xs of
+  [] -> []
+  (y:ys) -> app (nrev ys) [y]
+  
+app = \\xs ys -> case xs of
+  [] -> ys
+  (z:zs) -> (z:app zs ys)
+END
+
+ARGUMENTS = <<-END
+module Arguments where
+
+randomXS = \\level -> case level of
+  1 -> [1..10]
+  2 -> [10..100]
+  3 -> [100..1000]
+END
+
+  def self.perform(id)
+    puts "here"
+    @program = Program.find(id)
+    @program.generate_run_points
+  end
   
   def self.naive_reverse_code
-    "module Main where\r\rimport System.Environment (getArgs)\rimport Arguments\r\rmain = do\r  args <- getArgs\r  let level = read (head args) :: Int\r  print $ root (randomXS level)\r\r" +
-    "root = \\xs -> nrev xs\r\rnrev = \\xs -> case xs of\r  [] -> []\r  (y:ys) -> app (nrev ys) [y]\r\rapp = \\xs ys -> case xs of\r  [] -> ys\r  (z:zs) -> (z:app zs ys)"
+    NAIVE_REVERSE.gsub("\n","\r")
   end
   
   def self.arguments_code
-    "module Arguments where\r\rrandomXS = \\level -> case level of\r  1 -> [1..10]\r  2 -> [10..100]\r  3 -> [100..1000]"
+    ARGUMENTS.gsub("\n","\r")
   end
   
   def self.get_chomped_file_name(file_name)
@@ -109,8 +119,96 @@ import System.Environment (getArgs)
   end
   
   def asynch_benchmark_program
-    self.number_of_levels.times do |i|
-      Resque.enqueue(Run, self.id.to_s, (i + 1).to_s)
+    puts 'calling'
+    Resque.enqueue(Program, self.id.to_s)
+  end
+  
+  def levels
+    (1..self.number_of_levels).to_a
+  end
+  
+  def average_mem_size_by_level_id_and_run_type_id(level_id, run_type_id)
+    avg = 0
+    run_points = self.run_points.find_all_by_level_id_and_run_type_id(level_id, run_type_id)
+    run_points.each do |rp|
+      avg += rp.mem_size
+    end
+    avg / run_points.length
+  end
+  
+  def average_run_time_by_level_id_and_run_type_id(level_id, run_type_id)
+    avg = 0.0
+    run_points = self.run_points.find_all_by_level_id_and_run_type_id(level_id, run_type_id)
+    run_points.each do |rp|
+      avg += rp.run_time
+    end
+    avg / run_points.length
+  end
+  
+  def generate_run_points
+    #transformation dirs
+    program_dir = Program::PROGRAMS_DIR + self.id.to_s + "/"
+
+    normal_dir = program_dir + 'normal/'
+    super_dir = program_dir + 'super/'
+    distill_dir = program_dir + 'distill/'
+
+    Dir.mkdir(program_dir)
+    [normal_dir, super_dir, distill_dir].each do |folder|
+      Dir.mkdir(folder)
+    end
+    
+    #get executable name
+    chomped_file_name = Program.get_chomped_file_name(self.normal_file_name)
+
+    #inputs for all transformations
+    normal_file = normal_dir + self.normal_file_name
+    super_file = super_dir + self.normal_file_name
+    distill_file = distill_dir + self.normal_file_name
+    
+    #executables for all transformations
+    normal_obj = normal_dir + chomped_file_name
+    super_obj = super_dir + chomped_file_name
+    distill_obj = distill_dir + chomped_file_name
+    
+    #write arguments for all transformations
+    [normal_dir, super_dir, distill_dir].each do |dir|
+      File.open(dir + self.arguments_file_name, 'w') do |file|
+        file.write(self.arguments_file_contents)
+        file.close
+      end
+    end 
+    
+    #write initial benchmark
+    File.open(normal_file, 'w') do |file|
+      file.write(self.normal_file_contents)
+      file.close
+    end
+
+    #transform orignal with super & distill
+    super_in, super_out, super_err = Open3.popen3("#{Haskell.transformer} super #{normal_file}")
+    #distill_in, distill_out, distill_err = Open.popen3("#{Haskell.transformer} distill #{normal_file}")
+    #benchmark original, super & distill @program.number_of_levels times
+    #write benchmark values to db
+    #benchmark original
+    
+    #compile all
+    `#{Haskell.path} --make #{normal_file} -i#{normal_dir} -rtsopts`
+    `#{Haskell.path} --make #{super_file} -i#{super_dir} -rtsopts`
+    #`#{Haskell.path} --make #{distill_file} -i#{distill_dir} -rtsopts` 
+    
+    puts "No of Runs: " + self.number_of_runs.to_s
+    self.number_of_runs.times do |i|
+      puts "Run: " + i.to_s
+      self.number_of_levels.times do |level|
+        level += 1
+        @run_point = RunPoint.new
+        puts "Level: " + level.to_s
+        rpin, rpout, rperr = Open3.popen3("#{normal_obj} #{level.to_s} +RTS -sstderr")
+        output = rperr.read
+        output =~ /^.+\n (.+) MB total.+$/
+        puts $1
+      end
     end
   end
 end

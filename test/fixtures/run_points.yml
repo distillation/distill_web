@@ -3,15 +3,541 @@
 one:
   run_id: 1
   user_id: 1
-  program_id: 1
+  program_id: 2
   run_type_id: 1
-  run_time: 1
-  mem_size: 1
-
+  level_id: 1
+  run_time: 123
+  mem_size: 1234
+  
 two:
   run_id: 1
   user_id: 1
-  program_id: 1
+  program_id: 2
   run_type_id: 1
-  run_time: 1
-  mem_size: 1
+  level_id: 2
+  run_time: 123
+  mem_size: 1234
+  
+three:
+  run_id: 1
+  user_id: 1
+  program_id: 2
+  run_type_id: 1
+  level_id: 3
+  run_time: 123
+  mem_size: 1234
+  
+four:
+  run_id: 1
+  user_id: 1
+  program_id: 2
+  run_type_id: 1
+  level_id: 4
+  run_time: 123
+  mem_size: 1234
+  
+five:
+  run_id: 1
+  user_id: 1
+  program_id: 2
+  run_type_id: 1
+  level_id: 5
+  run_time: 123
+  mem_size: 1234
+  
+onec:
+  run_id: 1
+  user_id: 1
+  program_id: 2
+  run_type_id: 2
+  level_id: 1
+  run_time: 123
+  mem_size: 1234
+  
+twoc:
+  run_id: 1
+  user_id: 1
+  program_id: 2
+  run_type_id: 2
+  level_id: 2
+  run_time: 123
+  mem_size: 1234
+  
+threec:
+  run_id: 1
+  user_id: 1
+  program_id: 2
+  run_type_id: 2
+  level_id: 3
+  run_time: 123
+  mem_size: 1234
+  
+fourc:
+  run_id: 1
+  user_id: 1
+  program_id: 2
+  run_type_id: 2
+  level_id: 4
+  run_time: 123
+  mem_size: 1234
+  
+fivec:
+  run_id: 1
+  user_id: 1
+  program_id: 2
+  run_type_id: 2
+  level_id: 5
+  run_time: 123
+  mem_size: 1234
+  
+oned:
+  run_id: 1
+  user_id: 1
+  program_id: 2
+  run_type_id: 3
+  level_id: 1
+  run_time: 123
+  mem_size: 1234
+  
+twod:
+  run_id: 1
+  user_id: 1
+  program_id: 2
+  run_type_id: 3
+  level_id: 2
+  run_time: 123
+  mem_size: 1234
+  
+threed:
+  run_id: 1
+  user_id: 1
+  program_id: 2
+  run_type_id: 3
+  level_id: 3
+  run_time: 123
+  mem_size: 1234
+  
+fourd:
+  run_id: 1
+  user_id: 1
+  program_id: 2
+  run_type_id: 3
+  level_id: 4
+  run_time: 123
+  mem_size: 1234
+  
+fived:
+  run_id: 1
+  user_id: 1
+  program_id: 2
+  run_type_id: 3
+  level_id: 5
+  run_time: 123
+  mem_size: 1234
+  
+onee:
+  run_id: 1
+  user_id: 1
+  program_id: 2
+  run_type_id: 4
+  level_id: 1
+  run_time: 123
+  mem_size: 1234
+  
+twoe:
+  run_id: 1
+  user_id: 1
+  program_id: 2
+  run_type_id: 4
+  level_id: 2
+  run_time: 123
+  mem_size: 1234
+  
+threee:
+  run_id: 1
+  user_id: 1
+  program_id: 2
+  run_type_id: 4
+  level_id: 3
+  run_time: 123
+  mem_size: 1234
+  
+foure:
+  run_id: 1
+  user_id: 1
+  program_id: 2
+  run_type_id: 4
+  level_id: 4
+  run_time: 123
+  mem_size: 1234
+  
+fivee:
+  run_id: 1
+  user_id: 1
+  program_id: 2
+  run_type_id: 4
+  level_id: 5
+  run_time: 123
+  mem_size: 1234
+  
+onef:
+  run_id: 1
+  user_id: 1
+  program_id: 2
+  run_type_id: 5
+  level_id: 1
+  run_time: 123
+  mem_size: 1234
+  
+twof:
+  run_id: 1
+  user_id: 1
+  program_id: 2
+  run_type_id: 5
+  level_id: 2
+  run_time: 123
+  mem_size: 1234
+  
+threef:
+  run_id: 1
+  user_id: 1
+  program_id: 2
+  run_type_id: 5
+  level_id: 3
+  run_time: 123
+  mem_size: 1234
+  
+fourf:
+  run_id: 1
+  user_id: 1
+  program_id: 2
+  run_type_id: 5
+  level_id: 4
+  run_time: 123
+  mem_size: 1234
+  
+fivef:
+  run_id: 1
+  user_id: 1
+  program_id: 2
+  run_type_id: 5
+  level_id: 5
+  run_time: 123
+  mem_size: 1234
+  
+oneg:
+  run_id: 1
+  user_id: 1
+  program_id: 2
+  run_type_id: 6
+  level_id: 1
+  run_time: 123
+  mem_size: 1234
+  
+twog:
+  run_id: 1
+  user_id: 1
+  program_id: 2
+  run_type_id: 6
+  level_id: 2
+  run_time: 123
+  mem_size: 1234
+  
+threeg:
+  run_id: 1
+  user_id: 1
+  program_id: 2
+  run_type_id: 6
+  level_id: 3
+  run_time: 123
+  mem_size: 1234
+  
+fourg:
+  run_id: 1
+  user_id: 1
+  program_id: 2
+  run_type_id: 6
+  level_id: 4
+  run_time: 123
+  mem_size: 1234
+  
+fiveg:
+  run_id: 1
+  user_id: 1
+  program_id: 2
+  run_type_id: 6
+  level_id: 5
+  run_time: 123
+  mem_size: 1234
+
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one_two:
+  run_id: 1
+  user_id: 1
+  program_id: 2
+  run_type_id: 1
+  level_id: 1
+  run_time: 123
+  mem_size: 1234
+  
+two_two:
+  run_id: 1
+  user_id: 1
+  program_id: 2
+  run_type_id: 1
+  level_id: 2
+  run_time: 123
+  mem_size: 1234
+  
+three_two:
+  run_id: 1
+  user_id: 1
+  program_id: 2
+  run_type_id: 1
+  level_id: 3
+  run_time: 123
+  mem_size: 1234
+  
+four_two:
+  run_id: 1
+  user_id: 1
+  program_id: 2
+  run_type_id: 1
+  level_id: 4
+  run_time: 123
+  mem_size: 1234
+  
+five_two:
+  run_id: 1
+  user_id: 1
+  program_id: 2
+  run_type_id: 1
+  level_id: 5
+  run_time: 123
+  mem_size: 1234
+  
+onec_two:
+  run_id: 1
+  user_id: 1
+  program_id: 2
+  run_type_id: 2
+  level_id: 1
+  run_time: 123
+  mem_size: 1234
+  
+twoc_two:
+  run_id: 1
+  user_id: 1
+  program_id: 2
+  run_type_id: 2
+  level_id: 2
+  run_time: 123
+  mem_size: 1234
+  
+threec_two:
+  run_id: 1
+  user_id: 1
+  program_id: 2
+  run_type_id: 2
+  level_id: 3
+  run_time: 123
+  mem_size: 1234
+  
+fourc_two:
+  run_id: 1
+  user_id: 1
+  program_id: 2
+  run_type_id: 2
+  level_id: 4
+  run_time: 123
+  mem_size: 1234
+  
+fivec_two:
+  run_id: 1
+  user_id: 1
+  program_id: 2
+  run_type_id: 2
+  level_id: 5
+  run_time: 123
+  mem_size: 1234
+  
+oned_two:
+  run_id: 1
+  user_id: 1
+  program_id: 2
+  run_type_id: 3
+  level_id: 1
+  run_time: 123
+  mem_size: 1234
+  
+twod_two:
+  run_id: 1
+  user_id: 1
+  program_id: 2
+  run_type_id: 3
+  level_id: 2
+  run_time: 123
+  mem_size: 1234
+  
+threed_two:
+  run_id: 1
+  user_id: 1
+  program_id: 2
+  run_type_id: 3
+  level_id: 3
+  run_time: 123
+  mem_size: 1234
+  
+fourd_two:
+  run_id: 1
+  user_id: 1
+  program_id: 2
+  run_type_id: 3
+  level_id: 4
+  run_time: 123
+  mem_size: 1234
+  
+fived_two:
+  run_id: 1
+  user_id: 1
+  program_id: 2
+  run_type_id: 3
+  level_id: 5
+  run_time: 123
+  mem_size: 1234
+  
+onee_two:
+  run_id: 1
+  user_id: 1
+  program_id: 2
+  run_type_id: 4
+  level_id: 1
+  run_time: 123
+  mem_size: 1234
+  
+twoe_two:
+  run_id: 1
+  user_id: 1
+  program_id: 2
+  run_type_id: 4
+  level_id: 2
+  run_time: 123
+  mem_size: 1234
+  
+threee_two:
+  run_id: 1
+  user_id: 1
+  program_id: 2
+  run_type_id: 4
+  level_id: 3
+  run_time: 123
+  mem_size: 1234
+  
+foure_two:
+  run_id: 1
+  user_id: 1
+  program_id: 2
+  run_type_id: 4
+  level_id: 4
+  run_time: 123
+  mem_size: 1234
+  
+fivee_two:
+  run_id: 1
+  user_id: 1
+  program_id: 2
+  run_type_id: 4
+  level_id: 5
+  run_time: 123
+  mem_size: 1234
+  
+onef_two:
+  run_id: 1
+  user_id: 1
+  program_id: 2
+  run_type_id: 5
+  level_id: 1
+  run_time: 123
+  mem_size: 1234
+  
+twof_two:
+  run_id: 1
+  user_id: 1
+  program_id: 2
+  run_type_id: 5
+  level_id: 2
+  run_time: 123
+  mem_size: 1234
+  
+threef_two:
+  run_id: 1
+  user_id: 1
+  program_id: 2
+  run_type_id: 5
+  level_id: 3
+  run_time: 123
+  mem_size: 1234
+  
+fourf_two:
+  run_id: 1
+  user_id: 1
+  program_id: 2
+  run_type_id: 5
+  level_id: 4
+  run_time: 123
+  mem_size: 1234
+  
+fivef_two:
+  run_id: 1
+  user_id: 1
+  program_id: 2
+  run_type_id: 5
+  level_id: 5
+  run_time: 123
+  mem_size: 1234
+  
+oneg_two:
+  run_id: 1
+  user_id: 1
+  program_id: 2
+  run_type_id: 6
+  level_id: 1
+  run_time: 123
+  mem_size: 1234
+  
+twog_two:
+  run_id: 1
+  user_id: 1
+  program_id: 2
+  run_type_id: 6
+  level_id: 2
+  run_time: 123
+  mem_size: 1234
+  
+threeg_two:
+  run_id: 1
+  user_id: 1
+  program_id: 2
+  run_type_id: 6
+  level_id: 3
+  run_time: 123
+  mem_size: 1234
+  
+fourg_two:
+  run_id: 1
+  user_id: 1
+  program_id: 2
+  run_type_id: 6
+  level_id: 4
+  run_time: 123
+  mem_size: 1234
+  
+fiveg_two:
+  run_id: 1
+  user_id: 1
+  program_id: 2
+  run_type_id: 6
+  level_id: 5
+  run_time: 123
+  mem_size: 1234

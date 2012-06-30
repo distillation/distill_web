@@ -8,7 +8,6 @@ DistillWeb::Application.routes.draw do
   end
   
   resources :programs do
-    resources :runs
   end
 
   match 'login' => 'user_sessions#new', :as => :login

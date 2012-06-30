@@ -1,9 +1,25 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
 
 one:
-  name: MyString
-  description: MyString
+  id: 1
+  name: GHC
 
 two:
-  name: MyString
-  description: MyString
+  id: 2
+  name: GHC -O2
+  
+three:
+  id: 3
+  name: Super
+
+four:
+  id: 4
+  name: Super -O2
+
+five:
+  id: 5
+  name: Distill
+
+six:
+  id: 6
+  name: Distill -O2
