@@ -1,5 +1,5 @@
 class RunType < ActiveRecord::Base
-  attr_accessible :description, :name
+  attr_accessible :description, :name, :folder_name, :options
   belongs_to :run_point
   
   GHC = RunType.find_by_name('GHC')

@@ -3,23 +3,23 @@
 one:
   id: 1
   name: GHC
+  folder_name: ghc
 
 two:
   id: 2
   name: GHC -O2
+  options: -O2
+  folder_name: ghc_o2
   
 three:
   id: 3
   name: Super
+  folder_name: super
+  transformation_name: super
 
 four:
   id: 4
   name: Super -O2
-
-five:
-  id: 5
-  name: Distill
-
-six:
-  id: 6
-  name: Distill -O2
+  options: -O2
+  folder_name: super_o2
+  transformation_name: super

@@ -1,9 +1,12 @@
 class Program < ActiveRecord::Base
   belongs_to :user
-  has_many :run_points, :through => :run
+  has_many :run_points
+  
   accepts_nested_attributes_for :user
-  attr_accessible :user_id, :name, :normal_file_name, :normal_file_contents, :arguments_file_name, :number_of_levels, :number_of_runs, :file, :arguments_file_contents, :arguments
-  attr_accessible :super_file_contents, :distill_file_contents
+  
+  attr_accessible :user_id, :name, :normal_file_name, :normal_file_contents
+  attr_accessible :arguments_file_name, :number_of_levels, :number_of_runs, :file, :arguments_file_contents, :arguments
+  attr_accessible :super_file_contents, :distill_file_contents, :run_points
   validates :user_id, :presence => true
   validates :name, :presence => true
   validates :number_of_levels, :presence => true
@@ -20,6 +23,9 @@ class Program < ActiveRecord::Base
   PROGRAMS_DIR = FILES_ROOT + "programs/"
   
   ERROR_REGEX = /.+\/(.+\.hs.*\n.+)/
+  
+  MEM_SIZE_REGEX = /^.+\n (.+) MB total.+$/
+  RUN_TIME_REGEX = /^.*Total.*time.*\( (.*s) elapsed\)$/
   
   NAIVE_REVERSE = 
 <<-END
@@ -52,12 +58,6 @@ randomXS = \\level -> case level of
   2 -> [10..100]
   3 -> [100..1000]
 END
-
-  def self.perform(id)
-    puts "here"
-    @program = Program.find(id)
-    @program.generate_run_points
-  end
   
   def self.naive_reverse_code
     NAIVE_REVERSE.gsub("\n","\r")
@@ -114,12 +114,11 @@ END
     error.empty?
   end
   
-  def remove_files!
-    FileUtils.rm_rf(PROGRAMS_DIR + folder_name + '/')
+  def remove_files!(fn=folder_name)
+    FileUtils.rm_rf(PROGRAMS_DIR + fn + '/')
   end
   
   def asynch_benchmark_program
-    puts 'calling'
     Resque.enqueue(Program, self.id.to_s)
   end
   
@@ -129,85 +128,89 @@ END
   
   def average_mem_size_by_level_id_and_run_type_id(level_id, run_type_id)
     avg = 0
-    run_points = self.run_points.find_all_by_level_id_and_run_type_id(level_id, run_type_id)
-    run_points.each do |rp|
+    puts "here" + level_id.to_s + " " + run_type_id.to_s
+    rps = self.run_points.find_all_by_level_number_and_run_type_id(level_id, run_type_id)
+    puts "here"
+    puts rps.inspect
+    rps.each do |rp|
       avg += rp.mem_size
     end
-    avg / run_points.length
+    return 0 if rps.empty?
+    avg / rps.length
   end
   
   def average_run_time_by_level_id_and_run_type_id(level_id, run_type_id)
     avg = 0.0
-    run_points = self.run_points.find_all_by_level_id_and_run_type_id(level_id, run_type_id)
+    run_points = self.run_points.find_all_by_level_number_and_run_type_id(level_id, run_type_id)
     run_points.each do |rp|
       avg += rp.run_time
     end
     avg / run_points.length
   end
   
-  def generate_run_points
-    #transformation dirs
-    program_dir = Program::PROGRAMS_DIR + self.id.to_s + "/"
-
-    normal_dir = program_dir + 'normal/'
-    super_dir = program_dir + 'super/'
-    distill_dir = program_dir + 'distill/'
-
-    Dir.mkdir(program_dir)
-    [normal_dir, super_dir, distill_dir].each do |folder|
-      Dir.mkdir(folder)
+  def self.perform(id)
+    @program = Program.find(id)
+    RunType.all.each do |rt|
+      puts rt.name
+      @program.generate_run_points_for_run_type(rt)
     end
-    
-    #get executable name
-    chomped_file_name = Program.get_chomped_file_name(self.normal_file_name)
+  end
+  
+  def generate_run_points_for_run_type(run_type)
+    program_dir = Program::PROGRAMS_DIR + self.id.to_s + "/"
+    transformation_dir = program_dir + run_type.folder_name + "/"
 
-    #inputs for all transformations
-    normal_file = normal_dir + self.normal_file_name
-    super_file = super_dir + self.normal_file_name
-    distill_file = distill_dir + self.normal_file_name
+    Dir.mkdir(program_dir) unless File.exists?(program_dir)
+    Dir.mkdir(transformation_dir)
     
-    #executables for all transformations
-    normal_obj = normal_dir + chomped_file_name
-    super_obj = super_dir + chomped_file_name
-    distill_obj = distill_dir + chomped_file_name
+    chomped_file_name = Program.get_chomped_file_name(self.normal_file_name)
+    file = transformation_dir + self.normal_file_name
+    obj = transformation_dir + chomped_file_name
     
-    #write arguments for all transformations
-    [normal_dir, super_dir, distill_dir].each do |dir|
-      File.open(dir + self.arguments_file_name, 'w') do |file|
-        file.write(self.arguments_file_contents)
-        file.close
-      end
+    File.open(transformation_dir + self.arguments_file_name, 'w') do |f|
+      f.write(self.arguments_file_contents)
+      f.close
     end 
     
-    #write initial benchmark
-    File.open(normal_file, 'w') do |file|
-      file.write(self.normal_file_contents)
-      file.close
+    File.open(file, 'w') do |f|
+      f.write(self.normal_file_contents)
+      f.close
     end
-
-    #transform orignal with super & distill
-    super_in, super_out, super_err = Open3.popen3("#{Haskell.transformer} super #{normal_file}")
-    #distill_in, distill_out, distill_err = Open.popen3("#{Haskell.transformer} distill #{normal_file}")
-    #benchmark original, super & distill @program.number_of_levels times
-    #write benchmark values to db
-    #benchmark original
-    
-    #compile all
-    `#{Haskell.path} --make #{normal_file} -i#{normal_dir} -rtsopts`
-    `#{Haskell.path} --make #{super_file} -i#{super_dir} -rtsopts`
-    #`#{Haskell.path} --make #{distill_file} -i#{distill_dir} -rtsopts` 
-    
-    puts "No of Runs: " + self.number_of_runs.to_s
+    unless (run_type.transformation_name.nil?)
+      t_in, t_out, t_err = Open3.popen3("#{Haskell.transformer} #{run_type.transformation_name} #{file} #{run_type.transformation_name}")
+      if (run_type.transformation_name.eql?("super"))
+        File.open("#{obj}#{run_type.transformation_name.to_s}.hs") do |f|
+          self.update_attribute(:super_file_contents, f.read)
+          f.close
+        end
+      elsif(run_type.transformation_name.eql?("distill"))
+        File.open("#{obj}#{run_type.transformation_name.to_s}.hs") do |f|
+          self.update_attribute(:distill_file_contents, f.read)
+          f.close
+        end
+        self.save
+      end
+    end 
+    c_in, c_out, c_err = Open3.popen3("#{Haskell.path} --make #{run_type.options.to_s} #{obj}#{run_type.transformation_name.to_s}.hs -i#{transformation_dir} -rtsopts")
+    sleep(60)
+    perform_runs_for_run_type(obj, run_type)
+  end
+  
+  def perform_runs_for_run_type(obj_path, run_type)
     self.number_of_runs.times do |i|
-      puts "Run: " + i.to_s
       self.number_of_levels.times do |level|
         level += 1
-        @run_point = RunPoint.new
-        puts "Level: " + level.to_s
-        rpin, rpout, rperr = Open3.popen3("#{normal_obj} #{level.to_s} +RTS -sstderr")
-        output = rperr.read
-        output =~ /^.+\n (.+) MB total.+$/
-        puts $1
+        
+        rin, rerr, rstat = Open3.capture3("#{obj_path}#{run_type.transformation_name.to_s} #{level.to_s} +RTS -sstderr")
+        run_point = RunPoint.new
+        run_point.program_id = self.id
+        run_point.run_type_id = run_type.id
+        rerr =~ MEM_SIZE_REGEX
+        run_point.mem_size = $1.to_i
+        rerr =~ RUN_TIME_REGEX
+        run_point.run_time = $1.to_f
+        run_point.level_number = level
+        run_point.save
       end
     end
   end

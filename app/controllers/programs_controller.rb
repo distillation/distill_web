@@ -67,7 +67,8 @@ class ProgramsController < ApplicationController
         respond_to do |format|
           if @program.save
             @program.asynch_benchmark_program
-            format.html { redirect_to @program, :notice => 'Program was successfully created.' }
+            flash[:success] = 'Program successfully submitted, you will be emailed when benchmarking is complete.'
+            format.html { redirect_to @program }
             format.json { render :json => @program, :status => :created, :location => @program }
           else
             format.html { render :action => "new" }

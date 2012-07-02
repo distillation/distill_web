@@ -6,11 +6,35 @@
   .span12
     .row 
       .span6
-        %ul.nav.nav-tabs
-          %li.active
-            = link_to 'Input'
-        %pre{:class => 'brush: haskell'}
-          = @program.normal_file_contents.gsub("\n","\r")
+        - unless @program.run_points.empty?
+          .tabbable
+            %ul.nav.nav-tabs
+              %li.active
+                = link_to "Input", "#inputTab", {"data-toggle"=>"tab"}
+              - unless @program.super_file_contents.nil?
+                %li
+                  = link_to "Supercompiled", "#superTab", {"data-toggle"=>"tab"}
+              - unless @program.distill_file_contents.nil?
+                %li
+                  = link_to "Distilled", "#distillTab", {"data-toggle"=>"tab"}
+            .tab-content
+              .tab-pane.active#inputTab
+                %pre{:class => 'brush: haskell'}
+                  = @program.normal_file_contents.gsub("\n","\r")
+              - unless @program.super_file_contents.nil?
+                .tab-pane#superTab
+                  %pre{:class => 'brush: haskell'}
+                    = @program.super_file_contents.gsub("\n","\r")
+              - unless @program.distill_file_contents.nil?
+                .tab-pane#distillTab
+                  %pre{:class => 'brush: haskell'}
+                    = @program.distill_file_contents.gsub("\n","\r")
+        - else
+          %ul.nav.nav-tabs
+            %li.active
+              = link_to 'Input'
+          %pre{:class => 'brush: haskell'}
+            = @program.normal_file_contents.gsub("\n","\r")
       
       .span6
         %ul.nav.nav-tabs
@@ -21,7 +45,7 @@
               
     .row
       .span12
-        - if @program.run.nil?
+        - if @program.run_points.empty?
           .alert.alert-info
             Unfortunately benchmark results are still pending for this program
         - else
