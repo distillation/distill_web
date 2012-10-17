@@ -1,9 +1,33 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
 one:
-  id: 2
+  id: 3
   user_id: 1
   name: Naive Reverse
-  normal_file_contents: blah
-  arguments_file_contents: blah
+  normal_file_contents: |
+   module Main(main) where
+   
+   import Arguments
+   
+   data Nat = Z | S Nat deriving Show
+   data List a = Nil | Cons a (List a) deriving Show
+   
+   main = print $ nrev (levels 1000)
+   
+   nrev = \xs -> case xs of
+      Nil -> Nil
+      Cons y ys -> app (nrev ys) (Cons y Nil)
+      
+   app = \xs ys -> case xs of
+      Nil -> ys
+      Cons z zs -> Cons z (app zs ys)
+  arguments_file_contents: |
+   module Arguments(levels) where
+   
+   data Nat = Z | S Nat deriving Show
+   data List a = Nil | Cons a (List a) deriving Show
+   
+   levels = \i -> case i of
+      0 -> Nil
+      n -> Cons Z (levels (n - 1))
   number_of_levels: 5
   number_of_runs: 5
